@@ -1,0 +1,66 @@
+---
+title: "NDVI Linear regression model"
+output:
+  word_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r}
+#import the data
+library(readr)
+ndvi <- read_csv("data/ndvi.csv")
+head(ndvi) #to view the head of th data
+```
+
+we want a linear regression model based on this formula Biomass = B0 + B1\*NDVI
+
+```{r}
+#we can visualise the linear relationship between the NDVI and the BIOMASS with a scatterplot
+plot(x = ndvi$NDVI, y = ndvi$Biomass, main = "biomass ~ NDVI",
+     xlab = "NDVI", ylab = "Biomass",
+     pch = 10, frame = TRUE)
+abline(lm(Biomass ~ NDVI, data = ndvi), col = "blue")
+      
+# scatterplot
+```
+
+We can compute the correlation between the two variables
+
+```{r}
+cor.test(ndvi$Biomass, ndvi$NDVI)
+```
+
+Our correlation is too closer to 0. So there is no correlation between the two variables.
+
+[Here](https://statisticsbyjim.com/basics/correlations/#:~:text=A%20correlation%20between%20variables%20indicates,change%20in%20a%20specific%20direction.&text=For%20example%2C%20height%20and%20weight,weight%20also%20tends%20to%20increase.) we find how to explain the correlations
+
+We can force to make the linear model but it will not be really significant. But anyway let's try.
+
+```{r}
+#Our formula is Biomass = B0 + B1*NDVI
+mbao_model <- lm(Biomass ~ NDVI , data = ndvi)# the formula
+#we will print the model
+mbao_model
+
+```
+
+Now that we have built the linear model, we also have established the relationship between the predictor and response in the form of a mathematical formula for biomass as a function for ndvi. For the above output, you can notice the 'Coefficients' part having two components: *Intercept*: 0.6774, *NDVI*: 1.9443. These are also called the beta coefficients. In other words,**\
+**Biomass= Intercept + (β ∗ NDVI)
+
+Our model is:
+
+Biomass = 0.6674 + 1.9443\* NDVI
+
+Before using our regression model, we have to ensure that it is statistically significant. We will print it summary to check.
+
+```{r}
+summary(mbao_model)
+
+```
+
+We only have to check the p-value for the statistical significance. The p-Value is very important because, We can consider a linear model to be statistically significant only when both these p-Values are less that the pre-determined statistical significance level, which is ideally 0.05.
+
+In our case the p-value is 0.244, greater than 0.05.
+
+Our model is not significant statistically.
